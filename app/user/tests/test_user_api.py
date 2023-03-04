@@ -16,7 +16,7 @@ def create_user(**params):
 
 
 class PublicUserApiTests(TestCase):
-    """Test the public features of user API."""
+    """Test the public features of the user API."""
 
     def setUp(self):
         self.client = APIClient()
@@ -33,9 +33,9 @@ class PublicUserApiTests(TestCase):
         # check if the endpoint returns code "201 created"
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         # retrieve object from database with email
-        user = get_user_model().objects.get(email=payload)
+        user = get_user_model().objects.get(email=payload['email'])
         # if user created successfully user check password
-        self.assertTrue.check_password(payload['password'])
+        self.assertTrue(user.check_password(payload['password']))
         # password is not a part of a response
         self.assertNotIn('password', res.data)
 
@@ -52,11 +52,11 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_password_too_short_error(self):
-        """Test an error is returned if password less than 5 chars,"""
+        """Test an error is returned if password less than 5 chars."""
         payload = {
             'email': 'test@example.com',
             'password': 'pw',
-            'name': 'Test Name',
+            'name': 'Test name',
         }
         res = self.client.post(CREATE_USER_URL, payload)
 
